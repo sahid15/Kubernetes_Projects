@@ -1,0 +1,18 @@
+#!/bin/bash
+# Kill any existing port forwards
+pkill -f "port-forward.*argocd" 2>/dev/null
+sleep 2
+
+echo "Starting ArgoCD port forwarding on port 8081..."
+kubectl port-forward svc/argocd-server -n argocd 8081:443 > /dev/null 2>&1 &
+PF_PID=$!
+
+echo "Port forwarding started with PID: $PF_PID"
+echo "ArgoCD UI will be available at: https://localhost:8081"
+echo ""
+echo "Username: admin"
+echo -n "Password: "
+cat ~/argocd-password.txt
+echo ""
+echo ""
+echo "To stop port forwarding, run: kill $PF_PID"
